@@ -16,7 +16,7 @@ class Anuncios():
             # for que nos permite crear un objeto items para luego añadirlo a una lista y devolver su contenido
             for item in diccionario:
                 items = {"id": item[0], "titulo": item[1],
-                         "descripcion": item[2], "imagen": str(item[3]), "estado": item[4]}
+                         "descripcion": item[2], "imagen": str(item[3])}
 
                 diccionarios.append(items)
             conexion.commit()
@@ -29,15 +29,15 @@ class Anuncios():
             print(diccionarios)
             return diccionarios
 
-    def insert(self, id, titulo, descripcion, imagen, estado):
+    def insert(self, id, titulo, descripcion, imagen):
         try:
             conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
                                         host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
 
             cursor = conexion.cursor()
 
-            sql = "INSERT INTO anuncios VALUES(%s, %s, %s, %s, %s)"
-            datos = (id, titulo, descripcion, imagen, estado)
+            sql = "INSERT INTO anuncios VALUES(%s, %s, %s, %s)"
+            datos = (id, titulo, descripcion, imagen)
 
             cursor.execute(sql, datos)
 
@@ -102,7 +102,7 @@ class Anuncios():
             # for que nos permite crear un objeto items para luego añadirlo a una lista y devolver su contenido
             for item in diccionario:
                 items = {"id": item[0], "titulo": item[1],
-                         "descripcion": item[2], "imagen": str(item[3]), "estado": item[4]}
+                         "descripcion": item[2], "imagen": str(item[3])}
 
             diccionarios.append(items)
 
@@ -135,22 +135,21 @@ class Anuncios():
             cursor.close()
             conexion.close()
 
-    def actualizacion(self, id, titulo, descripcion, imagen, estado):
+    def actualizacion(self, id, titulo, descripcion, imagen):
         try:
             conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
                                         host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
 
             cursor = conexion.cursor()
 
-            sql = "UPDATE anuncios SET titulo = %s, descripcion = %s, imagen = %s, estado = %s WHERE id_anuncios = %s "
+            sql = "UPDATE anuncios SET titulo = %s, descripcion = %s, imagen = %s WHERE id_anuncios = %s "
 
             id = (id)
             titulo = (titulo)
             descripcion = (descripcion)
             imagen = (imagen)
-            estado = (estado)
 
-            cursor.execute(sql, (titulo, descripcion, imagen, estado, id))
+            cursor.execute(sql, (titulo, descripcion, imagen, id))
             conexion.commit()
             status = True
 

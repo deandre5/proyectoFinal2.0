@@ -123,7 +123,7 @@ class Personas:
             # for que nos permite crear un objeto items para luego añadirlo a una lista y devolver su contenido
             for item in diccionario:
                 items = {"id": item[0], "peso": item[1],
-                         "talla": item[2], "imc": item[3], "estado": item[4]}
+                         "talla": item[2], "imc": item[3]}
 
                 diccionarios.append(items)
             conexion.commit()
@@ -265,7 +265,7 @@ class Personas:
             # for que nos permite crear un objeto items para luego añadirlo a una lista y devolver su contenido
             for item in diccionario:
                 items = {"id": item[0], "peso": item[1],
-                         "talla": item[2], "imc": item[3], "estado": item[4]}
+                         "talla": item[2], "imc": item[3]}
 
             diccionarios.append(items)
 
