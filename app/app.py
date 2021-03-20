@@ -16,6 +16,7 @@ from app.controllers.generarAnuncio import GenerarAnuncio
 from app.controllers.consultarAnunciosControllers import ConsultarAnuncios
 from app.controllers.eliminarAnuncioControllers import EliminarAnuncios
 from app.controllers.editarAnuncioControllers import EditarAnuncios
+from app.controllers.EstadisticasControllers import Estadisticas
 
 from app.validators.LoginValidator import CreateLoginSchema
 from app.validators.ImcValidator import CreateImcSchema
@@ -32,6 +33,7 @@ generarAnuncio = GenerarAnuncio()
 consultaAnuncios = ConsultarAnuncios()
 eliminarAnuncios = EliminarAnuncios()
 actualizarAnuncios = EditarAnuncios()
+estadistica = Estadisticas()
 
 
 ImcValidator = CreateImcSchema()
@@ -259,6 +261,34 @@ def generarReporte():
             return jsonify({'status': 'error', "message": "Token invalido"})
     else:
         return jsonify({'status': 'No ha envido ningun token'})
+
+
+@app.route("/estadisticas", methods=["GET"])
+def estadisticas():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validacion(token)
+
+        if (validar):
+            if (validar.get('user') == 'admin'):
+
+                consulta = estadistica.generarEstadisticas()
+
+                if (consulta):
+                    return jsonify({"status": "OK", "estadisticas": consulta})
+                else:
+                    return jsonify({"status": "ERROR"})
+
+
+            else:
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"})
+    else:
+        return jsonify({'status': 'No ha envido ningun token'})
+
 
 
 @app.route('/crearAnuncio', methods=['POST'])
