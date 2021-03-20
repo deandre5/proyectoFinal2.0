@@ -1,27 +1,45 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 import datetime
 import jwt
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+from werkzeug.utils import secure_filename
 
 from app.controllers.registroPersocnasControllers import RegistroPersocnasControllers
 from app.controllers.loginPersonasControllers import LoginPersonas
 from app.controllers.calcularImcControllers import CalcularImc
+from app.controllers.consultarTestControllers import ConsultarTest
+from app.controllers.generarReporteTestControllers import ReporteTest
+from app.controllers.generarAnuncio import GenerarAnuncio
 
 from app.validators.LoginValidator import CreateLoginSchema
 from app.validators.ImcValidator import CreateImcSchema
+from app.validators.AnuncioValidator import CreateAnuncioSchema
 
 from app.config.config import KEY_TOKEN_AUTH
 
 registroPersonas = RegistroPersocnasControllers()
 loginPersonas = LoginPersonas()
 calcularImc = CalcularImc()
+consultarTests = ConsultarTest()
+reporteTest = ReporteTest()
+generarAnuncio = GenerarAnuncio()
 
 
 ImcValidator = CreateImcSchema()
 loginSchema = CreateLoginSchema()
+anuncioSchema = CreateAnuncioSchema()
 
 app = Flask(__name__)
 CORS(app)
+
+cloudinary.config(
+    cloud_name='hdjsownnk',
+    api_key='926599253344788',
+    api_secret='I8rBOy-rnozmrxhNL_Lg7hqtj7s'
+)
 
 
 def validacion(headers):
@@ -102,7 +120,7 @@ def login():
         if (consulta):
 
             encode_jwt = jwt.encode({'exp': datetime.datetime.utcnow(
-            ) + datetime.timedelta(seconds=1500), "user": consulta.get('user'), "rutina": consulta.get('rutina'), "dieta": consulta.get('dieta'), "test": consulta.get('test'), 'documento':consulta.get('documento')}, KEY_TOKEN_AUTH, algorithm='HS256')
+            ) + datetime.timedelta(seconds=1500), "user": consulta.get('user'), "rutina": consulta.get('rutina'), "dieta": consulta.get('dieta'), "test": consulta.get('test'), 'documento': consulta.get('documento')}, KEY_TOKEN_AUTH, algorithm='HS256')
 
             return jsonify({"status": "OK", "token": encode_jwt}), 200
 
@@ -112,7 +130,6 @@ def login():
     except Exception as Error:
         tojson = str(Error)
         return jsonify({"status": "Error", "message": tojson})
-
 
 
 @app.route('/calcularimc/<int:id>', methods=['POST'])
@@ -140,14 +157,117 @@ def imc(id):
                     else:
                         return jsonify({"status": "Error"})
 
-                
                 except Exception as error:
                     Errorjson = str(error)
-                    print (error)
+                    print(error)
                     return jsonify({"error": Errorjson})
 
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"})
+    else:
+        return jsonify({'status': 'No ha envido ningun token'})
+
+
+@app.route('/consultarTest', methods=['GET'])
+def consultarTest():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validacion(token)
+
+        if (validar):
+            if (validar.get('user') == 'admin'):
+
+                try:
+
+                    tests = consultarTests.consultar()
+
+                    if (tests):
+                        return jsonify({"status": "OK", "test": tests})
+                    else:
+                        return jsonify({"status": "ERROR"})
+
+                except Exception as error:
+                    Errorjson = str(error)
+                    print(error)
+                    return jsonify({"error": Errorjson})
+
+            else:
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"})
+    else:
+        return jsonify({'status': 'No ha envido ningun token'})
+
+
+@app.route('/generarReporte', methods=['GET'])
+def generarReporte():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validacion(token)
+
+        if (validar):
+            if (validar.get('user') == 'admin'):
+
+                try:
+
+                    reporte = reporteTest.generarReporte()
+                    return Response(reporte, mimetype="application/ms-excel", headers={"content-Disposition": "attachment; filename=reporteTest.csv"})
+
+                except Exception as error:
+                    Errorjson = str(error)
+                    print(error)
+                    return jsonify({"error": Errorjson})
+            else:
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"})
+    else:
+        return jsonify({'status': 'No ha envido ningun token'})
+
+
+@app.route('/crearAnuncio', methods=['POST'])
+def crearAnuncio():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validacion(token)
+
+        if (validar):
+            if (validar.get('user') == 'admin'):
+
+                try:
+                    validarSchema = anuncioSchema.validate(request.form)
+
+                    content = request.form
+
+                    if (request.files):
+
+                        file = request.files['imagen']
+
+                        consultnombre = generarAnuncio.consultnombre(content)
+
+                        if consultnombre:
+                            return jsonify({"status": "BAD", "message": "Nombe ya se encuentra registrado"})
+
+                        else:
+                            registro = generarAnuncio.generar(content, file)
+
+                            if (registro):
+                                return jsonify({'status': 'ok'}), 200
+
+                except Exception as error:
+                    tojson = str(error)
+                    print(tojson)
+                    return jsonify({"status": "no es posible validar", "error": tojson}), 406
+
+            else:
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+
         else:
             return jsonify({'status': 'error', "message": "Token invalido"})
     else:

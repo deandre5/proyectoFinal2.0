@@ -7,8 +7,6 @@ class CalcularImc():
         peso = int(content.get('peso'))
         altura = int(content.get('altura'))
 
-        print(peso, altura, "-*-*-*-*-*-*-*-*-*")
-
         altura2 = (altura + altura)/100
 
         imc = peso/altura2
