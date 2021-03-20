@@ -252,5 +252,32 @@ class Personas:
             print(diccionarios)
             return diccionarios
 
+    def consultarTestID(self, id):
+        try:
+            conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
+                                        host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
+            cursor = conexion.cursor()
+
+            sql = "SELECT * FROM test WHERE id_test = %s"
+            cursor.execute(sql, (id, ))
+            diccionario = cursor.fetchall()
+            diccionarios = []
+            # for que nos permite crear un objeto items para luego añadirlo a una lista y devolver su contenido
+            for item in diccionario:
+                items = {"id": item[0], "peso": item[1],
+                         "talla": item[2], "imc": item[3], "estado": item[4]}
+
+            diccionarios.append(items)
+
+            conexion.commit()
+
+        except Exception as error:
+            print("Error in the conetion with the database", error)
+        finally:
+            print(diccionarios)
+            cursor.close()
+            conexion.close()
+            return diccionarios
+
 
 

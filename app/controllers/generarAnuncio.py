@@ -27,6 +27,8 @@ class GenerarAnuncio():
 
             if allowed_file(file.filename):
 
+                filename = secure_filename(file.filename)
+
                 titulo = content["titulo"]
                 descripcion = content["descripcion"]
                 estado = content["estado"]

@@ -13,6 +13,9 @@ from app.controllers.calcularImcControllers import CalcularImc
 from app.controllers.consultarTestControllers import ConsultarTest
 from app.controllers.generarReporteTestControllers import ReporteTest
 from app.controllers.generarAnuncio import GenerarAnuncio
+from app.controllers.consultarAnunciosControllers import ConsultarAnuncios
+from app.controllers.eliminarAnuncioControllers import EliminarAnuncios
+from app.controllers.editarAnuncioControllers import EditarAnuncios
 
 from app.validators.LoginValidator import CreateLoginSchema
 from app.validators.ImcValidator import CreateImcSchema
@@ -26,6 +29,9 @@ calcularImc = CalcularImc()
 consultarTests = ConsultarTest()
 reporteTest = ReporteTest()
 generarAnuncio = GenerarAnuncio()
+consultaAnuncios = ConsultarAnuncios()
+eliminarAnuncios = EliminarAnuncios()
+actualizarAnuncios = EditarAnuncios()
 
 
 ImcValidator = CreateImcSchema()
@@ -202,6 +208,31 @@ def consultarTest():
         return jsonify({'status': 'No ha envido ningun token'})
 
 
+@app.route('/consultarTestId', methods=['GET'])
+def consultarTestId():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validacion(token)
+
+        if (validar):
+            idtest = validar.get('test')
+
+            if idtest == "null":
+                return jsonify({"status": "porfavor acerquese a un instructor para realizar su test"})
+
+            test = consultarTests.consultarTestId(idtest)
+
+            if (test):
+                return jsonify({"status": "OK", "test": test})
+            else:
+                return jsonify({"status": "ERROR, no existe el test"})
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"})
+    else:
+        return jsonify({'status': 'No ha envido ningun token'})
+
+
 @app.route('/generarReporte', methods=['GET'])
 def generarReporte():
     if (request.headers.get('Authorization')):
@@ -264,6 +295,140 @@ def crearAnuncio():
                     tojson = str(error)
                     print(tojson)
                     return jsonify({"status": "no es posible validar", "error": tojson}), 406
+
+            else:
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"})
+    else:
+        return jsonify({'status': 'No ha envido ningun token'})
+
+
+@app.route("/editarAnuncio/<int:id>", methods=["PUT"])
+def editarAnuncioID(id):
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validacion(token)
+
+        if (validar):
+            if (validar.get('user') == 'admin'):
+
+                try:
+                    id = str(id)
+                    validarSchema = anuncioSchema.validate(request.form)
+                    content = request.form
+
+                    if (len(request.files) > 0):
+                        file = request.files['imagen']
+
+                        actualizar = actualizarAnuncios.editarConFoto(
+                            id, content, file)
+
+                        if isinstance(actualizar, int):
+                            return jsonify({"status": "error, ingrese un archivo valido"}), 400
+
+                        if isinstance(actualizar, str):
+                            return jsonify({"status": "error, ya hay un anuncio con ese nombre"}), 400
+
+                        if actualizar:
+                            return jsonify({"status": "OK"})
+                        else:
+                            return jsonify({"status": "Error, no existe el anuncio", })
+
+                    else:
+                        actualizar = actualizarAnuncios.editarSinFoto(
+                            id, content)
+
+                        if isinstance(actualizar, str):
+                            return jsonify({"status": "error, ya hay un anuncio con ese nombre"}), 400
+
+                        if (actualizar):
+                            return jsonify({"status": "OK"})
+                        else:
+                            return jsonify({"status": "Error, no existe el anuncio", })
+                except Exception as error:
+                    tojson = str(error)
+                    print(tojson)
+                    return jsonify({"status": "no es posible validar", "error": tojson}), 406
+
+            else:
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"})
+    else:
+        return jsonify({'status': 'No ha envido ningun token'})
+
+
+@app.route('/consultarAnuncios', methods=['GET'])
+def consultarAnuncios():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validacion(token)
+
+        if (validar):
+
+            anuncios = consultaAnuncios.consultaGeneral()
+
+            if (anuncios):
+
+                return jsonify({"status": "OK", "anuncios": anuncios})
+
+            else:
+                return jsonify({"status": "ERROR"}), 400
+
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"})
+    else:
+        return jsonify({'status': 'No ha envido ningun token'})
+
+
+@app.route('/consultarAnuncios/<int:id>', methods=['GET'])
+def consultarAnunciosID(id):
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validacion(token)
+
+        if (validar):
+            id = str(id)
+            anuncios = consultaAnuncios.consultaId(id)
+
+            if (anuncios):
+
+                return jsonify({"status": "OK", "anuncios": anuncios})
+
+            else:
+                return jsonify({"status": "No existe el anuncio"}), 400
+
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"})
+    else:
+        return jsonify({'status': 'No ha envido ningun token'})
+
+
+@app.route("/eliminar/<int:id>", methods=['DELETE'])
+def eliminarAnuncio(id):
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validacion(token)
+
+        if (validar):
+            if (validar.get('user') == 'admin'):
+
+                id = str(id)
+
+                eliminar = eliminarAnuncios.eliminar(id)
+
+                if (eliminar):
+                    return jsonify({"status": "OK"})
+
+                else:
+                    return jsonify({"status": "No existe el anuncio"})
 
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406

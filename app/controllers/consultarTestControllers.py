@@ -12,4 +12,14 @@ class ConsultarTest():
         else:
             return False
 
+    def consultarTestId(self, id):
+
+        consulta = personas.consultarTestID(id)
+
+        if (consulta):
+            return consulta
+        else:
+            return False
+
+
         
