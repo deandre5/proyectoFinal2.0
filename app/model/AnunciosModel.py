@@ -72,7 +72,7 @@ class Anuncios():
 
             # se examina el len del diccionario despues de la consulta, si es mayor a cero se devuelve true ya que se encuentra repetido
 
-            if len(diccionario) > 0:
+            if len(diccionario) > 1:
                 status = True
             # caso contrario false
             else:

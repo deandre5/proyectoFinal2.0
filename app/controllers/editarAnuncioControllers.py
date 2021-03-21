@@ -24,24 +24,26 @@ def allowed_file(filename):
 class EditarAnuncios():
     def editarConFoto(self, id, content, file):
 
-
         anuncio = anuncios.ConsultaId(id)
 
         if (len(anuncio) < 1):
             return False
         
+        
         titulo = content["titulo"]
 
         verificarNombre = anuncios.consultarAnuncios(titulo)
-
+        
         if (verificarNombre):
             return 'NO'
 
         if allowed_file(file.filename):
+
             
             
             descripcion = content["descripcion"]
-            estado = content["estado"]
+
+           
             
             filename = secure_filename(file.filename)
 
@@ -57,14 +59,24 @@ class EditarAnuncios():
                 t = h[0]
 
             filename = str(t)
+            
+            
+
             cloudinary.uploader.upload(file, public_id=filename)
             url = cloudinary.utils.cloudinary_url(filename)
 
-            actualizacion = anuncios.actualizacion(id, titulo, descripcion, url[0], estado)
-            return actualizacion
+            
 
-        status = int(0)
-        return status
+            actualizacion = anuncios.actualizacion(id, titulo, descripcion, url[0])
+
+            if actualizacion:
+
+                return actualizacion
+            
+            else:
+
+                status = int(0)
+                return status
 
     def editarSinFoto(self, id, content):
         anuncio = anuncios.ConsultaId(id)
@@ -74,15 +86,14 @@ class EditarAnuncios():
         
         titulo = content["titulo"]
         descripcion = content["descripcion"]
-        estado = content["estado"]
-        imagen = content["imagen"]
+        imagen = content["url"]
 
         verificarNombre = anuncios.consultarAnuncios(titulo)
 
         if (verificarNombre):
             return 'NO'
 
-        actualizacion = anuncios.actualizacion(id, titulo, descripcion, imagen, estado)
+        actualizacion = anuncios.actualizacion(id, titulo, descripcion, imagen)
 
         return actualizacion
 

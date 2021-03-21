@@ -280,7 +280,6 @@ def estadisticas():
                 else:
                     return jsonify({"status": "ERROR"})
 
-
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
 
@@ -288,7 +287,6 @@ def estadisticas():
             return jsonify({'status': 'error', "message": "Token invalido"})
     else:
         return jsonify({'status': 'No ha envido ningun token'})
-
 
 
 @app.route('/crearAnuncio', methods=['POST'])
@@ -350,16 +348,18 @@ def editarAnuncioID(id):
                     validarSchema = anuncioSchema.validate(request.form)
                     content = request.form
 
-                    if (len(request.files) > 0):
+                    if len(request.files) > 0:
                         file = request.files['imagen']
 
                         actualizar = actualizarAnuncios.editarConFoto(
                             id, content, file)
 
-                        if isinstance(actualizar, int):
+                        if actualizar == 0:
+
                             return jsonify({"status": "error, ingrese un archivo valido"}), 400
 
                         if isinstance(actualizar, str):
+                            print("STR")
                             return jsonify({"status": "error, ya hay un anuncio con ese nombre"}), 400
 
                         if actualizar:
@@ -375,7 +375,7 @@ def editarAnuncioID(id):
                             return jsonify({"status": "error, ya hay un anuncio con ese nombre"}), 400
 
                         if (actualizar):
-                            return jsonify({"status": "OK"})
+                            return jsonify({"status": "OK"}), 200
                         else:
                             return jsonify({"status": "Error, no existe el anuncio", })
                 except Exception as error:
