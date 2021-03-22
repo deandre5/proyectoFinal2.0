@@ -73,10 +73,10 @@ class EditarAnuncios():
 
                 return actualizacion
             
-            else:
+        else:
 
-                status = int(0)
-                return status
+            status = int(0)
+            return status
 
     def editarSinFoto(self, id, content):
         anuncio = anuncios.ConsultaId(id)

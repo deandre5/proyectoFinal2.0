@@ -7,7 +7,6 @@ import cloudinary.uploader
 import cloudinary.api
 from werkzeug.utils import secure_filename
 
-from app.controllers.registroPersocnasControllers import RegistroPersocnasControllers
 from app.controllers.loginPersonasControllers import LoginPersonas
 from app.controllers.calcularImcControllers import CalcularImc
 from app.controllers.consultarTestControllers import ConsultarTest
@@ -24,7 +23,6 @@ from app.validators.AnuncioValidator import CreateAnuncioSchema
 
 from app.config.config import KEY_TOKEN_AUTH
 
-registroPersonas = RegistroPersocnasControllers()
 loginPersonas = LoginPersonas()
 calcularImc = CalcularImc()
 consultarTests = ConsultarTest()
@@ -65,57 +63,6 @@ def validacion(headers):
         return status
 
 
-@app.route('/admin')
-def index():
-    encode_jwt = jwt.encode({'exp': datetime.datetime.utcnow(
-    ) + datetime.timedelta(seconds=1500), "user": "admin"}, KEY_TOKEN_AUTH, algorithm='HS256')
-
-    print(encode_jwt)
-
-    return jsonify({"status": "ok", "token": encode_jwt})
-
-
-@app.route("/registrar", methods=["POST"])
-def registrar():
-    if (request.headers.get('Authorization')):
-        token = request.headers.get('Authorization')
-
-        validar = validacion(token)
-
-        if (validar):
-            if (validar.get('user') == 'admin'):
-
-                try:
-
-                    content = request.get_json()
-
-                    consulta = registroPersonas.consultar(content)
-
-                    if (consulta):
-                        return jsonify({"status": "BAD", "message": 'El correo o el documento ya estan registrdos'}), 200
-
-                    else:
-
-                        registro = registroPersonas.registrar(content)
-
-                        if (registro):
-
-                            return jsonify({"status": "OK"}), 200
-                        else:
-                            return jsonify({"status": str(registro)}), 500
-
-                except Exception as error:
-                    Errorjson = str(error)
-                    return jsonify({"error": Errorjson})
-
-            else:
-                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
-        else:
-            return jsonify({'status': 'error', "message": "Token invalido"})
-    else:
-        return jsonify({'status': 'No ha envido ningun token'})
-
-
 @app.route('/login', methods=['POST'])
 def login():
 
@@ -128,7 +75,7 @@ def login():
         if (consulta):
 
             encode_jwt = jwt.encode({'exp': datetime.datetime.utcnow(
-            ) + datetime.timedelta(seconds=1500), "user": consulta.get('user'), "rutina": consulta.get('rutina'), "dieta": consulta.get('dieta'), "test": consulta.get('test'), 'documento': consulta.get('documento')}, KEY_TOKEN_AUTH, algorithm='HS256')
+            ) + datetime.timedelta(seconds=1500), "user": consulta.get('user'), "rutina": consulta.get('rutina'), "dieta": consulta.get('dieta'), "test": consulta.get('test'), 'documento': consulta.get('documento'), "correo":consulta.get('correo')}, KEY_TOKEN_AUTH, algorithm='HS256')
 
             return jsonify({"status": "OK", "token": encode_jwt}), 200
 
