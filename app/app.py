@@ -74,7 +74,7 @@ def login():
 
 
         if (consulta == 0):
-            return jsonify({"status": "No existe el correo"}), 406
+            return jsonify({"status": "Usuario no valido"}), 406
 
         if (consulta):
 
