@@ -30,6 +30,10 @@ class LoginPersonas:
                 diccionarios["test"] = idtest
                 diccionarios["documento"] = documento
 
+        else:
+            status = int(0)
+            return status
+
         
 
         if bcrypt.checkpw(bytes(str(password), encoding='utf-8'), password_db):

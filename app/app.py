@@ -72,6 +72,10 @@ def login():
 
         consulta = loginPersonas.login(content)
 
+
+        if (consulta == 0):
+            return jsonify({"status": "No existe el correo"}), 406
+
         if (consulta):
 
             encode_jwt = jwt.encode({'exp': datetime.datetime.utcnow(
