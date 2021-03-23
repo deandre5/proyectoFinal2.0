@@ -74,7 +74,7 @@ def login():
 
 
         if (consulta == 0):
-            return jsonify({"status": "Usuario no valido"}), 406
+            return jsonify({"status": "Usuario no valido"}), 400
 
         if (consulta):
 
@@ -84,7 +84,7 @@ def login():
             return jsonify({"status": "OK", "token": encode_jwt}), 200
 
         else:
-            return jsonify({"status": "User not valid"}),406
+            return jsonify({"status": "User not valid"}),400
 
     except Exception as Error:
         tojson = str(Error)
