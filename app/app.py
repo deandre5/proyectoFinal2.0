@@ -88,7 +88,7 @@ def login():
 
     except Exception as Error:
         tojson = str(Error)
-        return jsonify({"status": "Error", "message": tojson}),406
+        return jsonify({"status": "Error", "message": tojson}),400
 
 
 @app.route('/calcularimc/<int:id>', methods=['POST'])
