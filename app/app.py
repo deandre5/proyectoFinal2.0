@@ -80,7 +80,9 @@ def login():
             encode_jwt = jwt.encode({'exp': datetime.datetime.utcnow(
             ) + datetime.timedelta(seconds=1500), "user": consulta.get('user'), "rutina": consulta.get('rutina'), "dieta": consulta.get('dieta'), "test": consulta.get('test'), 'documento': consulta.get('documento'), "correo": consulta.get('correo')}, KEY_TOKEN_AUTH, algorithm='HS256')
 
-            return jsonify({"status": "OK", "token": encode_jwt}), 200
+            usuario = consulta.get('user')
+
+            return jsonify({"status": "OK", "token": encode_jwt, "user": usuario}), 200
 
         else:
             return jsonify({"status": "User not valid"}), 400
