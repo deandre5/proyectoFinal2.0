@@ -9,7 +9,6 @@ class ConsultarAnuncios():
         anunciosSistem = anuncios.consultar()
         return anunciosSistem
 
-    
     def consultaId(self, id):
 
         anuncioSistem = anuncios.ConsultaId(id)

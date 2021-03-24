@@ -72,23 +72,22 @@ def login():
 
         consulta = loginPersonas.login(content)
 
-
         if (consulta == 0):
             return jsonify({"status": "Usuario no valido"}), 400
 
         if (consulta):
 
             encode_jwt = jwt.encode({'exp': datetime.datetime.utcnow(
-            ) + datetime.timedelta(seconds=1500), "user": consulta.get('user'), "rutina": consulta.get('rutina'), "dieta": consulta.get('dieta'), "test": consulta.get('test'), 'documento': consulta.get('documento'), "correo":consulta.get('correo')}, KEY_TOKEN_AUTH, algorithm='HS256')
+            ) + datetime.timedelta(seconds=1500), "user": consulta.get('user'), "rutina": consulta.get('rutina'), "dieta": consulta.get('dieta'), "test": consulta.get('test'), 'documento': consulta.get('documento'), "correo": consulta.get('correo')}, KEY_TOKEN_AUTH, algorithm='HS256')
 
             return jsonify({"status": "OK", "token": encode_jwt}), 200
 
         else:
-            return jsonify({"status": "User not valid"}),400
+            return jsonify({"status": "User not valid"}), 400
 
     except Exception as Error:
         tojson = str(Error)
-        return jsonify({"status": "Error", "message": tojson}),400
+        return jsonify({"status": "Error", "message": tojson}), 400
 
 
 @app.route('/calcularimc/<int:id>', methods=['POST'])
@@ -112,9 +111,9 @@ def imc(id):
                         return jsonify({"status": "No existe el usuario"}), 406
 
                     if (registrar):
-                        return jsonify({"status": "OK"}),200
+                        return jsonify({"status": "OK"}), 200
                     else:
-                        return jsonify({"status": "Error"}),400
+                        return jsonify({"status": "Error"}), 400
 
                 except Exception as error:
                     Errorjson = str(error)
@@ -124,9 +123,9 @@ def imc(id):
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
         else:
-            return jsonify({'status': 'error', "message": "Token invalido"}),406
+            return jsonify({'status': 'error', "message": "Token invalido"}), 406
     else:
-        return jsonify({'status': 'No ha envido ningun token'}),406
+        return jsonify({'status': 'No ha envido ningun token'}), 406
 
 
 @app.route('/consultarTest', methods=['GET'])
@@ -143,23 +142,22 @@ def consultarTest():
 
                     tests = consultarTests.consultar()
 
-
                     if (tests):
-                        return jsonify({"status": "OK", "test": tests}),200
+                        return jsonify({"status": "OK", "test": tests}), 200
                     else:
-                        return jsonify({"status": "ERROR"}),400
+                        return jsonify({"status": "ERROR"}), 400
 
                 except Exception as error:
                     Errorjson = str(error)
                     print(error)
-                    return jsonify({"error": Errorjson}),400
+                    return jsonify({"error": Errorjson}), 400
 
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
         else:
-            return jsonify({'status': 'error', "message": "Token invalido"}),406
+            return jsonify({'status': 'error', "message": "Token invalido"}), 406
     else:
-        return jsonify({'status': 'No ha envido ningun token'}),406
+        return jsonify({'status': 'No ha envido ningun token'}), 406
 
 
 @app.route('/consultarTestId', methods=['GET'])
@@ -178,13 +176,13 @@ def consultarTestId():
             test = consultarTests.consultarTestId(idtest)
 
             if (test):
-                return jsonify({"status": "OK", "test": test}),200
+                return jsonify({"status": "OK", "test": test}), 200
             else:
                 return jsonify({"status": "ERROR, no existe el test"}), 400
         else:
-            return jsonify({'status': 'error', "message": "Token invalido"}),406
+            return jsonify({'status': 'error', "message": "Token invalido"}), 406
     else:
-        return jsonify({'status': 'No ha envido ningun token'}),406
+        return jsonify({'status': 'No ha envido ningun token'}), 406
 
 
 @app.route('/generarReporte', methods=['GET'])
@@ -200,7 +198,7 @@ def generarReporte():
                 try:
 
                     reporte = reporteTest.generarReporte()
-                    return Response(reporte, mimetype="application/ms-excel", headers={"content-Disposition": "attachment; filename=reporteTest.csv"}),200
+                    return Response(reporte, mimetype="application/ms-excel", headers={"content-Disposition": "attachment; filename=reporteTest.csv"}), 200
 
                 except Exception as error:
                     Errorjson = str(error)
@@ -210,9 +208,9 @@ def generarReporte():
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
 
         else:
-            return jsonify({'status': 'error', "message": "Token invalido"}),406
+            return jsonify({'status': 'error', "message": "Token invalido"}), 406
     else:
-        return jsonify({'status': 'No ha envido ningun token'}),406
+        return jsonify({'status': 'No ha envido ningun token'}), 406
 
 
 @app.route("/estadisticas", methods=["GET"])
@@ -228,17 +226,17 @@ def estadisticas():
                 consulta = estadistica.generarEstadisticas()
 
                 if (consulta):
-                    return jsonify({"status": "OK", "estadisticas": consulta}),200
+                    return jsonify({"status": "OK", "estadisticas": consulta}), 200
                 else:
-                    return jsonify({"status": "ERROR"}),400
+                    return jsonify({"status": "ERROR"}), 400
 
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
 
         else:
-            return jsonify({'status': 'error', "message": "Token invalido"}),406
+            return jsonify({'status': 'error', "message": "Token invalido"}), 406
     else:
-        return jsonify({'status': 'No ha envido ningun token'}),406
+        return jsonify({'status': 'No ha envido ningun token'}), 406
 
 
 @app.route('/crearAnuncio', methods=['POST'])
@@ -263,7 +261,7 @@ def crearAnuncio():
                         consultnombre = generarAnuncio.consultnombre(content)
 
                         if consultnombre:
-                            return jsonify({"status": "BAD", "message": "Nombe ya se encuentra registrado"}),400
+                            return jsonify({"status": "BAD", "message": "Nombe ya se encuentra registrado"}), 400
 
                         else:
                             registro = generarAnuncio.generar(content, file)
@@ -280,9 +278,9 @@ def crearAnuncio():
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
 
         else:
-            return jsonify({'status': 'error', "message": "Token invalido"}),406
+            return jsonify({'status': 'error', "message": "Token invalido"}), 406
     else:
-        return jsonify({'status': 'No ha envido ningun token'}),406
+        return jsonify({'status': 'No ha envido ningun token'}), 406
 
 
 @app.route("/editarAnuncio/<int:id>", methods=["PUT"])
@@ -315,9 +313,9 @@ def editarAnuncioID(id):
                             return jsonify({"status": "error, ya hay un anuncio con ese nombre"}), 400
 
                         if actualizar:
-                            return jsonify({"status": "OK"}),200
+                            return jsonify({"status": "OK"}), 200
                         else:
-                            return jsonify({"status": "Error, no existe el anuncio" }),400
+                            return jsonify({"status": "Error, no existe el anuncio"}), 400
 
                     else:
                         actualizar = actualizarAnuncios.editarSinFoto(
@@ -329,7 +327,7 @@ def editarAnuncioID(id):
                         if (actualizar):
                             return jsonify({"status": "OK"}), 200
                         else:
-                            return jsonify({"status": "Error, no existe el anuncio", }),400
+                            return jsonify({"status": "Error, no existe el anuncio", }), 400
                 except Exception as error:
                     tojson = str(error)
                     print(tojson)
@@ -339,9 +337,9 @@ def editarAnuncioID(id):
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
 
         else:
-            return jsonify({'status': 'error', "message": "Token invalido"}),406
+            return jsonify({'status': 'error', "message": "Token invalido"}), 406
     else:
-        return jsonify({'status': 'No ha envido ningun token'}),406
+        return jsonify({'status': 'No ha envido ningun token'}), 406
 
 
 @app.route('/consultarAnuncios', methods=['GET'])
@@ -357,15 +355,15 @@ def consultarAnuncios():
 
             if (anuncios):
 
-                return jsonify({"status": "OK", "anuncios": anuncios}),200
+                return jsonify({"status": "OK", "anuncios": anuncios}), 200
 
             else:
                 return jsonify({"status": "ERROR"}), 400
 
         else:
-            return jsonify({'status': 'error', "message": "Token invalido"}),406
+            return jsonify({'status': 'error', "message": "Token invalido"}), 406
     else:
-        return jsonify({'status': 'No ha envido ningun token'}),406
+        return jsonify({'status': 'No ha envido ningun token'}), 406
 
 
 @app.route('/consultarAnuncios/<int:id>', methods=['GET'])
@@ -381,15 +379,15 @@ def consultarAnunciosID(id):
 
             if (anuncios):
 
-                return jsonify({"status": "OK", "anuncios": anuncios}),200
+                return jsonify({"status": "OK", "anuncios": anuncios}), 200
 
             else:
                 return jsonify({"status": "No existe el anuncio"}), 400
 
         else:
-            return jsonify({'status': 'error', "message": "Token invalido"}),406
+            return jsonify({'status': 'error', "message": "Token invalido"}), 406
     else:
-        return jsonify({'status': 'No ha envido ningun token'}),406
+        return jsonify({'status': 'No ha envido ningun token'}), 406
 
 
 @app.route("/eliminar/<int:id>", methods=['DELETE'])
@@ -407,15 +405,15 @@ def eliminarAnuncio(id):
                 eliminar = eliminarAnuncios.eliminar(id)
 
                 if (eliminar):
-                    return jsonify({"status": "OK"}),200
+                    return jsonify({"status": "OK"}), 200
 
                 else:
-                    return jsonify({"status": "No existe el anuncio"}),400
+                    return jsonify({"status": "No existe el anuncio"}), 400
 
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
 
         else:
-            return jsonify({'status': 'error', "message": "Token invalido"}),406
+            return jsonify({'status': 'error', "message": "Token invalido"}), 406
     else:
-        return jsonify({'status': 'No ha envido ningun token'}),406
+        return jsonify({'status': 'No ha envido ningun token'}), 406

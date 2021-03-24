@@ -159,4 +159,4 @@ class Anuncios():
         finally:
             cursor.close()
             conexion.close()
-            return status  
+            return status

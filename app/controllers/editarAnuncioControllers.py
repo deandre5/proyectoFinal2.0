@@ -28,23 +28,18 @@ class EditarAnuncios():
 
         if (len(anuncio) < 1):
             return False
-        
-        
+
         titulo = content["titulo"]
 
         verificarNombre = anuncios.consultarAnuncios(titulo)
-        
+
         if (verificarNombre):
             return 'NO'
 
         if allowed_file(file.filename):
 
-            
-            
             descripcion = content["descripcion"]
 
-           
-            
             filename = secure_filename(file.filename)
 
             dia = datetime.datetime.utcnow()
@@ -59,20 +54,17 @@ class EditarAnuncios():
                 t = h[0]
 
             filename = str(t)
-            
-            
 
             cloudinary.uploader.upload(file, public_id=filename)
             url = cloudinary.utils.cloudinary_url(filename)
 
-            
-
-            actualizacion = anuncios.actualizacion(id, titulo, descripcion, url[0])
+            actualizacion = anuncios.actualizacion(
+                id, titulo, descripcion, url[0])
 
             if actualizacion:
 
                 return actualizacion
-            
+
         else:
 
             status = int(0)
@@ -83,7 +75,7 @@ class EditarAnuncios():
 
         if (len(anuncio) < 1):
             return False
-        
+
         titulo = content["titulo"]
         descripcion = content["descripcion"]
         imagen = content["url"]
@@ -96,4 +88,3 @@ class EditarAnuncios():
         actualizacion = anuncios.actualizacion(id, titulo, descripcion, imagen)
 
         return actualizacion
-

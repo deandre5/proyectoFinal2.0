@@ -110,7 +110,6 @@ class Personas:
             print(diccionarios)
             return diccionarios
 
-
     def registerTest(id, peso, talla, imc):
         try:
             conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
@@ -136,7 +135,6 @@ class Personas:
             cursor.close()
             conexion.close()
             return status
-
 
     def registerTestPerson(idtest, documento):
         try:
@@ -198,7 +196,6 @@ class Personas:
             conexion.close()
             return status
 
-
     def consultarTest(self):
         try:
 
@@ -253,7 +250,6 @@ class Personas:
             conexion.close()
             return diccionarios
 
-
     def estadisticas(self):
         try:
             conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
@@ -267,7 +263,7 @@ class Personas:
             diccionario = cursor.fetchall()
             test = diccionario[0]
             conexion.commit()
-            
+
             sql = "SELECT count(*) FROM rutinas"
             cursor.execute(sql,)
             diccionario = cursor.fetchall()
@@ -291,7 +287,7 @@ class Personas:
             diccionario = cursor.fetchall()
             admin = diccionario[0]
             conexion.commit()
-            
+
             sql = "SELECT count(*) FROM personas WHERE tipouser = 'user'"
             cursor.execute(sql,)
             diccionario = cursor.fetchall()
@@ -304,11 +300,10 @@ class Personas:
             personas = diccionario[0]
             conexion.commit()
 
-
-            items = {"test": test[0], "rutinas": rutinas[0], "ejercicios": ejercicios[0], "dietas": dietas[0], "admin": admin[0], "user": user[0], "personas": personas[0]}
+            items = {"test": test[0], "rutinas": rutinas[0], "ejercicios": ejercicios[0],
+                     "dietas": dietas[0], "admin": admin[0], "user": user[0], "personas": personas[0]}
 
             diccionarios.append(items)
-            
 
         except Exception as error:
             print("Error in the conetion with the database", error)
@@ -317,6 +312,3 @@ class Personas:
             cursor.close()
             conexion.close()
             return diccionarios
-
-
-

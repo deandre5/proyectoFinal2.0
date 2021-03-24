@@ -31,7 +31,6 @@ class GenerarAnuncio():
 
                 titulo = content["titulo"]
                 descripcion = content["descripcion"]
-                
 
                 dia = datetime.datetime.utcnow()
                 salt = bcrypt.gensalt()
@@ -59,10 +58,10 @@ class GenerarAnuncio():
                 else:
                     id_bd = 1
 
-                registrar = anuncios.insert(id_bd,titulo, descripcion, url[0])
+                registrar = anuncios.insert(id_bd, titulo, descripcion, url[0])
 
                 return registrar
-        
+
         except Exception as error:
             status = False
             return status
@@ -72,7 +71,3 @@ class GenerarAnuncio():
 
         consult = anuncios.consultarAnuncios(nombre)
         return consult
-
-
-
-

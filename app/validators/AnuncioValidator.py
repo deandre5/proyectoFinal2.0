@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields, validate
-from  marshmallow.validate import Range
+from marshmallow.validate import Range
+
 
 class CreateAnuncioSchema(Schema):
 

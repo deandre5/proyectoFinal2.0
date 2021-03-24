@@ -3,9 +3,10 @@ import bcrypt
 
 personas = Personas()
 
+
 class LoginPersonas:
     def login(self, content):
-        
+
         password = content.get('password')
         correo = content.get('correo')
 
@@ -25,8 +26,8 @@ class LoginPersonas:
 
                 diccionarios['correo'] = correo
                 diccionarios["user"] = tipouser
-                diccionarios["rutina"] =idrutina
-                diccionarios["dieta"] =iddieta
+                diccionarios["rutina"] = idrutina
+                diccionarios["dieta"] = iddieta
                 diccionarios["test"] = idtest
                 diccionarios["documento"] = documento
 
@@ -39,11 +40,3 @@ class LoginPersonas:
         else:
             status = int(0)
             return status
-
-        
-
-       
-
-
-
-        
