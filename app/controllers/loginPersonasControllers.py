@@ -23,6 +23,7 @@ class LoginPersonas:
                 iddieta = row[4]
                 idtest = row[5]
                 documento = row[6]
+                nombre = row[7]
 
                 diccionarios['correo'] = correo
                 diccionarios["user"] = tipouser
@@ -30,6 +31,7 @@ class LoginPersonas:
                 diccionarios["dieta"] = iddieta
                 diccionarios["test"] = idtest
                 diccionarios["documento"] = documento
+                diccionarios['nombre'] = nombre
 
             if bcrypt.checkpw(bytes(str(password), encoding='utf-8'), password_db):
                 return diccionarios

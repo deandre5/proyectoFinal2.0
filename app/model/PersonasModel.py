@@ -70,7 +70,7 @@ class Personas:
                                         host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
 
             cursor = conexion.cursor()
-            sql = "SELECT correo, contraseña, tipopersona, idrutina, iddieta, idtest, documento FROM personas where correo = %s"
+            sql = "SELECT correo, contraseña, tipopersona, idrutina, iddieta, idtest, documento, nombre FROM personas where correo = %s"
             cursor.execute(sql, (correo,))
 
             diccionario = cursor.fetchall()
