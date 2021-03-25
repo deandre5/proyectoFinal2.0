@@ -209,8 +209,20 @@ class Personas:
             diccionarios = []
             # for que nos permite crear un objeto items para luego añadirlo a una lista y devolver su contenido
             for item in diccionario:
+                if item[5] < 18.5:
+                    estado = "Bajo de peso"
+                elif item[5] >= 18.5 and item[5] <= 24.99:
+                    estado = "Normal"
+                elif item[5] >= 25 and item[5] <= 29.99:
+                    estado = "Sobrepeso"
+                elif item[5] >= 30 and item[5] <= 34.99:
+                    estado = "Obesidad tipo 1"
+                elif item[5] >= 35 and item[5] <= 39.99:
+                    estado = "Obesidad tipo 2"
+                elif item[5] >= 40:
+                    estado = "Obesidad tipo 3"
                 items = {"nombres": item[0], "apellidos": item[1],
-                         "documento": item[2], "peso": item[3], "talla": item[4], "imc": item[5]}
+                         "documento": item[2], "peso": item[3], "talla": item[4], "imc": item[5], "estado": estado}
 
                 diccionarios.append(items)
             conexion.commit()
