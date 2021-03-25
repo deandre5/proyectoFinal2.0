@@ -282,13 +282,13 @@ class Personas:
             dietas = diccionario[0]
             conexion.commit()
 
-            sql = "SELECT count(*) FROM personas WHERE tipouser = 'admin'"
+            sql = "SELECT count(*) FROM personas WHERE tipopersona = 'admin'"
             cursor.execute(sql,)
             diccionario = cursor.fetchall()
             admin = diccionario[0]
             conexion.commit()
 
-            sql = "SELECT count(*) FROM personas WHERE tipouser = 'user'"
+            sql = "SELECT count(*) FROM personas WHERE tipopersona = 'user'"
             cursor.execute(sql,)
             diccionario = cursor.fetchall()
             user = diccionario[0]
