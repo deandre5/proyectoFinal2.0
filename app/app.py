@@ -82,8 +82,9 @@ def login():
 
             usuario = consulta.get('user')
             nombre = consulta.get('nombre')
+            imagen = consulta.get('imagen')
 
-            return jsonify({"status": "OK", "token": encode_jwt, "user": usuario, "nombre": nombre}), 200
+            return jsonify({"status": "OK", "token": encode_jwt, "user": usuario, "nombre": nombre, "imagen": imagen}), 200
 
         else:
             return jsonify({"status": "User not valid"}), 400
