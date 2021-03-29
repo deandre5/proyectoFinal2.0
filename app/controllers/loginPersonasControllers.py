@@ -14,6 +14,8 @@ class LoginPersonas:
 
         diccionarios = {}
 
+        print(login,"*/-*/*-/-*/-*/")
+
         if(login):
             for row in login:
                 password_db = bytes(row[1], encoding='utf-8')

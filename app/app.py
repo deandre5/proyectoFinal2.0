@@ -6,6 +6,9 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 from werkzeug.utils import secure_filename
+from app.helpers.helpers import validacion
+from app.config.config import KEY_TOKEN_AUTH
+
 
 from app.controllers.loginPersonasControllers import LoginPersonas
 from app.controllers.calcularImcControllers import CalcularImc
@@ -21,7 +24,6 @@ from app.validators.LoginValidator import CreateLoginSchema
 from app.validators.ImcValidator import CreateImcSchema
 from app.validators.AnuncioValidator import CreateAnuncioSchema
 
-from app.config.config import KEY_TOKEN_AUTH
 
 loginPersonas = LoginPersonas()
 calcularImc = CalcularImc()
@@ -40,27 +42,6 @@ anuncioSchema = CreateAnuncioSchema()
 
 app = Flask(__name__)
 CORS(app)
-
-cloudinary.config(
-    cloud_name='hdjsownnk',
-    api_key='926599253344788',
-    api_secret='I8rBOy-rnozmrxhNL_Lg7hqtj7s'
-)
-
-
-def validacion(headers):
-    token = headers.split(' ')
-
-    try:
-        # se devulve la informacion util del usuario
-        data = jwt.decode(token[1], KEY_TOKEN_AUTH, algorithms=['HS256'])
-        status = True
-        print(data)
-        return data
-    except Exception as error:
-        print(error)
-        status = False
-        return status
 
 
 @app.route('/login', methods=['POST'])
